@@ -130,7 +130,7 @@ function quicksort(a, l, r) {
   };
 }
 
-let input = [58, 5, 50, 99, 61, 32, 27, 45, 75];
+let input = [47, 50, 61, 41, 53, 12, 68, 63, 3];
 
 // Ітеративне злиття
 let iterRes = mergeSortIterative(input.slice());
@@ -169,3 +169,4 @@ console.log(
   "Рекурсивних викликів:",
   quickRes.recursiveCalls
 );
+
