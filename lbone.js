@@ -30,7 +30,7 @@ function selectionSort(arr) {
   return { sorted: arr, comparisons, assignments };
 }
 
-const arr1 = [58, 5, 50, 99, 61, 32, 27, 45, 75];
+const arr1 = [47, 50, 61, 41, 53, 12, 68, 63, 3];
 const result1 = selectionSort([...arr1]);
 console.log("Selection Sort:");
 console.log("Вхідний масив:", arr1);
@@ -71,10 +71,11 @@ function insertionSort(arr) {
   return { sorted: arr, comparisons, assignments };
 }
 
-let arr2 = [58, 5, 50, 99, 61, 32, 27, 45, 75];
+let arr2 = [47, 50, 61, 41, 53, 12, 68, 63, 3];
 let result2 = insertionSort([...arr2]);
 console.log("Insertion Sort:");
 console.log("Вхідний масив:", arr2);
 console.log("Відсортований масив:", result2.sorted);
 console.log("Порівнянь:", result2.comparisons);
 console.log("Присвоєнь:", result2.assignments);
+
