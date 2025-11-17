@@ -1,81 +1,41 @@
-const M = 13;
-const A = (Math.sqrt(5) - 1) / 2;
+const INF = 1000000000;
 
-const UA = {
-  "А":1,"Б":2,"В":3,"Г":4,"Ґ":5,"Д":6,"Е":7,"Є":8,
-  "Ж":9,"З":10,"И":11,"І":12,"Ї":13,"Й":14,
-  "К":15,"Л":16,"М":17,"Н":18,"О":19,"П":20,
-  "Р":21,"С":22,"Т":23,"У":24,"Ф":25,"Х":26,
-  "Ц":27,"Ч":28,"Ш":29,"Щ":30,"Ь":31,"Ю":32,"Я":33
-};
-
-const WORDS = [
-  "Не", "той", "багатий", "у", "кого", "багато",
-  "грошей", "а", "той", "у", "кого", "душа", "багата"
+let dist = [
+  [0, 0, 1, 4, 0, 0, 0, 0],
+  [0, 0, 3, 5, 0, 7, 0, 0],
+  [1, 3, 0, 0, 0, 5, 0, 4],
+  [4, 5, 0, 0, 1, 0, 0, 0],
+  [0, 0, 0, 1, 0, 0, 4, 0],
+  [0, 7, 5, 0, 0, 0, 6, 0],
+  [0, 0, 0, 0, 4, 6, 0, 5],
+  [0, 0, 4, 0, 0, 0, 5, 0]
 ];
 
-function wordValue(word) {
-  return word
-    .toUpperCase()
-    .split("")
-    .map(ch => UA[ch] || 0)
-    .reduce((a, b) => a + b, 0);
-}
-
-function hashDiv(word) {
-  return wordValue(word) % M;
-}
-
-function hashMul(word) {
-  const k = wordValue(word);
-  return Math.floor(16 * ((k * A) % 1));
-}
-
-function buildOpenHashTable(words, hashFn) {
-  const table = Array.from({ length: M }, () => []);
-  for (let w of words) {
-    const idx = hashFn(w);
-    table[idx].push(w);
+// замінюємо 0 на INF, крім головної діагоналі
+for (let i = 0; i < 8; i++) {
+  for (let j = 0; j < 8; j++) {
+    if (i !== j && dist[i][j] === 0) {
+      dist[i][j] = INF;
+    }
   }
-  return table;
 }
 
-function buildClosedHashTable(words, hashFn) {
-  const table = Array(M).fill(null);
-  for (let w of words) {
-    let base = hashFn(w);
-    for (let i = 0; i < M; i++) {
-      const idx = (base + i) % M;
-      if (table[idx] === null) {
-        table[idx] = w;
-        break;
+function floyd() {
+  const n = dist.length;
+
+  for (let k = 0; k < n; k++) {
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        if (dist[i][k] + dist[k][j] < dist[i][j]) {
+          dist[i][j] = dist[i][k] + dist[k][j];
+        }
       }
     }
   }
-  return table;
+
+  return dist;
 }
 
-function printOpen(title, table) {
-  console.log(title);
-  for (let i = 0; i < table.length; i++) {
-    console.log(i.toString().padStart(2, "0"), ":", table[i]);
-  }
-}
+const result = floyd();
+console.log("Matrix of shortest paths:", result);
 
-function printClosed(title, table) {
-  console.log(title);
-  for (let i = 0; i < table.length; i++) {
-    console.log(i.toString().padStart(2, "0"), ":", table[i] ?? "(пусто)");
-  }
-}
-
-const openDiv = buildOpenHashTable(WORDS, hashDiv);
-const openMul = buildOpenHashTable(WORDS, hashMul);
-const closedDiv = buildClosedHashTable(WORDS, hashDiv);
-const closedMul = buildClosedHashTable(WORDS, hashMul);
-
-printOpen("=== Открытая таблица (деление) ===", openDiv);
-printOpen("=== Открытая таблица (умножение) ===", openMul);
-
-printClosed("=== Закрытая таблица (деление) ===", closedDiv);
-printClosed("=== Закрытая таблица (умножение) ===", closedMul);
